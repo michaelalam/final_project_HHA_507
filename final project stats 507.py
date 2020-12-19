@@ -21,7 +21,6 @@ import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 import time
-import helper
 
 
 
@@ -40,6 +39,18 @@ def load_outpatient():
     df_outpatient_2 = pd.read_csv('https://raw.githubusercontent.com/hantswilliams/AHI_STATS_507/main/Week13_Summary/output/df_outpatient_2.csv')
     return df_outpatient_2
 
+
+
+def get_all_hospitals(name: str):
+    for hospital_name in df_hospital_2['hospital_name']:
+        if(name.lower() in hospital_name.lower()):
+            print(hospital_name)
+            
+def get_sum_by_group(df, group_name: str, quantity_name: str):
+    costs = df.groupby(group_name)[quantity_name].sum().reset_index()
+    costs[quantity_name] = costs[quantity_name].astype('float64')
+    return costs
+    
 
 st.title('Medicare —Hey this is a comparison between Stony Brook University Hospital and Mount Sinai Hospital - NY')
 
@@ -178,7 +189,7 @@ st.dataframe(costs_condition_hospital)
 
 # lets you type in the name of a hospital and returns a list of that hospital
 # You can use upper or lower case
-# print(helper.get_all_hospitals(""))
+# print(get_all_hospitals(""))
 
 # prints all the columns you have access to in the dataframe
 # you can access the information in the columns like df['column_name'] e.g. df_hospital_2['hospital_name']
@@ -227,7 +238,7 @@ costs_sum['delta'] = costs_sum['average_total_payments'] - costs_sum['average_me
 data_frame = inpatient_ny
 group_name = "provider_name"
 quantity_name = "average_covered_charges"
-sum_by_group = helper.get_sum_by_group(data_frame.dropna(), group_name, quantity_name)
+sum_by_group = get_sum_by_group(data_frame.dropna(), group_name, quantity_name)
 
 # This parts plots the data above to your website
 bar_avg_payments = px.bar(sum_by_group, x = group_name, y = quantity_name)
@@ -240,7 +251,7 @@ st.plotly_chart(bar_avg_payments)
 #data_frame = inpatient_ny
 #group_name = "provider_name"
 #quantity_name = "average_total_payments"
-#sum_by_group = helper.get_sum_by_group(data_frame.where(data_frame["hospital_name"]).dropna(), group_name, quantity_name)
+#sum_by_group = get_sum_by_group(data_frame.where(data_frame["hospital_name"]).dropna(), group_name, quantity_name)
 
 # This parts plots the data above to your website
 #bar_avg_payments = px.bar(sum_by_group, x = group_name, y = quantity_name)
