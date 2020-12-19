@@ -41,7 +41,7 @@ def load_outpatient():
     return df_outpatient_2
 
 
-st.title('Medicare —Hey this is mike Expenses - NY')
+st.title('Medicare —Hey this is a comparison between Stony Brook University Hospital and Mount Sinai Hospital - NY')
 
 
 
